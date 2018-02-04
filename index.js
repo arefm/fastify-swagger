@@ -20,7 +20,9 @@ function fastifySwagger (fastify, opts, next) {
   const securityDefinitions = opts.swagger.securityDefinitions || null
 
   if (opts.exposeRoute === true) {
-    fastify.register(require('./routes'))
+    fastify.register(require('./routes'), {
+      baseUrl: opts.baseUrl
+    })
   }
 
   const cache = {

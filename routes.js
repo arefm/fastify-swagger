@@ -18,8 +18,12 @@ Object.keys(files).forEach(filename => {
 })
 
 function fastifySwagger (fastify, opts, next) {
+  var baseUrl = opts.baseUrl || '/documentation'
+  Object.keys(files).forEach(filename => {
+    files[filename].contents = files[filename].contents.replace(/\{\{baseUrl\}\}/g, '.' + baseUrl)
+  })
   fastify.route({
-    url: '/documentation/json',
+    url: baseUrl + '/json',
     method: 'GET',
     schema: { hide: true },
     handler: function (req, reply) {
@@ -28,7 +32,7 @@ function fastifySwagger (fastify, opts, next) {
   })
 
   fastify.route({
-    url: '/documentation/yaml',
+    url: baseUrl + '/yaml',
     method: 'GET',
     schema: { hide: true },
     handler: function (req, reply) {
@@ -39,14 +43,14 @@ function fastifySwagger (fastify, opts, next) {
   })
 
   fastify.route({
-    url: '/documentation',
+    url: baseUrl,
     method: 'GET',
     schema: { hide: true },
     handler: sendStaticFiles
   })
 
   fastify.route({
-    url: '/documentation/:file',
+    url: baseUrl + '/:file',
     method: 'GET',
     schema: { hide: true },
     handler: sendStaticFiles
